@@ -34,7 +34,7 @@ SET "Salary" = '500'
 WHERE "JobPosition" = 'Chef';
 
 -- Delete all employees that have the full name of "Lazy Larry".
-DELETE FROM "Employees" WHERE "FullName" ='Lazy Larry';
+DELETE FROM "Employees" WHERE "FullName" = 'Lazy Larry';
 
 -- Add a column to the table: ParkingSpot as textual information that can store up to 10 characters.
 ALTER TABLE "Employees"
