@@ -103,6 +103,15 @@ INSERT INTO "ProductOrders" ("OrderId","ProductId", "OrderQuantity") VALUES ('1'
 -- Add Quantity to Flowbee order.
 INSERT INTO "ProductOrders" ("OrderId","ProductId", "OrderQuantity") VALUES ('1', '2', '2');
 
+-- Given a building, return all employees that work in that building. 
+-- Show this query for buildings named North Side, East Side, and finally a building that you actually have in your data 
+-- even if your data doesn't have any departments in those buildings. 
+-- NOTE this means you can't manually look up Ids and use them, you have to let SQL do that work. (Hint: JOIN)
+
+SELECT * FROM "Employees"
+JOIN "Departments" ON "Departments"."Id" = "Employees"."DepartmentId"
+WHERE "Departments"."Building" = 'Main';
+
 -- Find all orders that contain the product id of 2.
 SELECT * From "Orders"
 JOIN "ProductOrders" ON "Orders"."Id" = "ProductOrders"."OrderId"
