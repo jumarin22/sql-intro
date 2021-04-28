@@ -39,3 +39,80 @@ DELETE FROM "Employees" WHERE "FullName" = 'Lazy Larry';
 -- Add a column to the table: ParkingSpot as textual information that can store up to 10 characters.
 ALTER TABLE "Employees"
 ADD "ParkingSpot" varchar(10); 
+
+--
+-- Begin 03-03 - Foreign Keys - The SQL.
+--
+
+-- Add a table named Departments.
+CREATE TABLE "Departments" ( 
+ "Id" SERIAL PRIMARY KEY, 
+ "DepartmentName" TEXT, 
+ "Building" TEXT 
+ );
+
+-- Add a Foreign key DepartmentId to your Employees Table.
+ALTER TABLE "Employees" 
+ADD COLUMN "DepartmentId" INTEGER NULL 
+REFERENCES "Departments" ("Id");
+
+-- Add table named Products.
+CREATE TABLE "Products" (
+  "Id" SERIAL PRIMARY KEY,
+  "Price" MONEY,
+  "Name" TEXT,
+  "Description" TEXT,
+  "QuantityInStock" INTEGER
+);
+
+-- Add table named Orders.
+CREATE TABLE "Orders" (
+"Id" SERIAL PRIMARY KEY,
+"OrderNumber" TEXT,
+"DatePlaced" TIMESTAMP,
+"Email" TEXT
+);
+
+-- Create table "ProductOrders".
+CREATE TABLE "ProductOrders" (
+  "Id" SERIAL PRIMARY KEY,
+  "OrderId" INTEGER REFERENCES "Orders" ("Id"),
+  "ProductId" INTEGER REFERENCES "Products" ("Id")
+  "OrderQuantity" INTEGER;
+);
+
+-- Insert Departments.
+INSERT INTO "Departments" ("DepartmentName", "Building") VALUES ('Development', 'Main');
+INSERT INTO "Departments" ("DepartmentName", "Building") VALUES ('Marketing', 'North');
+
+-- Insert Employees.
+INSERT INTO "Employees" ("FullName", "Salary", "JobPosition", "PhoneExtension", "IsPartTime", "DepartmentId") VALUES ('Tim Smith', '40000', 'Programmer', '123', 'false', '1'); 
+INSERT INTO "Employees" ("FullName", "Salary", "JobPosition", "PhoneExtension", "IsPartTime", "DepartmentId") VALUES ('Barbara Ramsey', '80000', 'Manager', '234', 'false', '1');
+INSERT INTO "Employees" ("FullName", "Salary", "JobPosition", "PhoneExtension", "IsPartTime", "DepartmentId") VALUES ('Tom Jones', '32000', 'Admin', '456', 'true', '2');
+
+-- Insert Products.
+INSERT INTO "Products" ("Price", "Name", "Description", "QuantityInStock") VALUES ('12.45', 'Widget', 'The Original Widget', '100');
+INSERT INTO "Products" ("Price", "Name", "Description", "QuantityInStock") VALUES ('99.99', 'Flowbee', 'Perfect for haircuts', '3');
+
+-- Insert a new order with order number X529.
+INSERT INTO "Orders" ("OrderNumber", "DatePlaced", "Email") VALUES ('X529', '2020-01-01 16:55:00', 'person@example.com');
+
+-- Add Quantity to Widget order.
+INSERT INTO "ProductOrders" ("OrderId","ProductId", "OrderQuantity") VALUES ('1', '1', '3');
+
+-- Add Quantity to Flowbee order.
+INSERT INTO "ProductOrders" ("OrderId","ProductId", "OrderQuantity") VALUES ('1', '2', '2');
+
+-- Find all orders that contain the product id of 2.
+SELECT * From "Orders"
+JOIN "ProductOrders" ON "Orders"."Id" = "ProductOrders"."OrderId"
+WHERE "ProductOrders"."ProductId" = '2';
+
+-- Find the Flowbee.
+SELECT "Orders"."OrderNumber", "Products"."Name", "ProductOrders"."OrderQuantity"
+FROM "ProductOrders"
+JOIN "Products" ON "Products"."Id" = "ProductOrders"."ProductId"
+JOIN "Orders" ON "Orders"."Id" = "ProductOrders"."OrderId"
+WHERE ("Products"."Name" = 'Flowbee');
+
+
